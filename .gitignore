@@ -1,0 +1,8 @@
+/build/
+/target/
+/WebContent/META-INF
+/WebContent/WEB-INF
+/.settings
+/.project
+/.classpath
+/src/hibernate.cfg.xml
