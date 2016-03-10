@@ -1,0 +1,8 @@
+Each servlet has a property named 'security'. Every option is checked in servlet aspect and allows the user into the servlet or redirects them. The following options are possible:
+	none		everyone allowed
+	stranger	only not loggedi n allowed
+	user		only logged in allowed
+	
+Status ajax servlet sends report of the current state of application:
+	if logged in, sends the user name
+	alerts from recent actions
