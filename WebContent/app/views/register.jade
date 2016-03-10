@@ -1,0 +1,20 @@
+extends ./template.jade
+
+block styles
+
+block content
+	form(method="post", action="")
+		span name
+		input(name="name")/
+		span email
+		input(name="email")/
+		span password
+		input(name="password", type="password")/
+		span retype password
+		input(name="password-repeat", type="password")/
+		img(src="captcha")
+		span captcha
+		input(name="captcha")/
+		input(type="submit")/
+
+block scripts

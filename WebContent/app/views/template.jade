@@ -1,0 +1,27 @@
+doctype html
+html
+    head
+        title Service
+        meta(charset="utf-8")
+        meta(name="viewport", content="width=device-width", initial-scale="1.0")
+        each val in ['libs/bootstrap.min.css','libs/font-awesome/css/font-awesome.min.css','css/global.css']
+            link(rel="stylesheet",href=val)/
+        block styles
+    body
+
+        div(class="container")
+            div(class="row")
+                div(id="menu",class="col-xs-12")
+            hr
+            div(class="row")
+                div(id="status-bar",class="col-xs-12")
+            hr
+            div(class="row")
+                block content
+
+
+        section(id="scripts")
+            each val in ['libs/jquery.js','libs/jquery.cookie.js','js/global.js']
+                script(src=val)
+
+            block scripts

@@ -1,0 +1,24 @@
+extends ./template.jade
+
+block styles
+
+block content
+	h1 edit profile
+	h2 change password
+	form(id="change-password-form",action="?action=password",method="POST")
+		div
+			span old password
+			input(type="password", name="old-password")
+		div
+			span new password
+			input(type="password", name="password")
+		div
+			span repeat new password
+			input(type="password", name="password-repeat")
+		input(type="submit")
+	h2 update profile picture
+	form(id="update-picture-form",action="?action=picture",method="POST",enctype="multipart/form-data")
+		input(type="file",name="file")
+		input(type="submit")
+
+block scripts
