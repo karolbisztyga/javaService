@@ -2,7 +2,7 @@
 /target/
 /WebContent/META-INF
 /WebContent/WEB-INF
+/WebContent/app/node_modules
 /.settings
 /.project
 /.classpath
-/src/hibernate.cfg.xml

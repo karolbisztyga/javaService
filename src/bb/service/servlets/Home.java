@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
+import bb.service.database.managers.UserManager;
 import bb.service.sessionstorage.UserSessionStorage;
 
 @WebServlet(urlPatterns={"","/home"},
@@ -17,10 +20,12 @@ import bb.service.sessionstorage.UserSessionStorage;
 			@WebInitParam(name="view",value="home"),
 		})
 public class Home extends HttpServlet {
-	private static final long serialVersionUID = 1L;
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//...
+		String s = UserManager.buildAvatarFilePath(request);
+		if(s!=null)System.out.println("-----------------------" + s);
+		s = UserManager.buildAvatarServerPath(request);
+		if(s!=null)System.out.println("-----------------------" + s);
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,7 +33,7 @@ public class Home extends HttpServlet {
 	}
 	
 	public static String getPathPrefix() {
-		return "http://localhost:8080/Service/";
+		return "http://localhost:8080/ServiceGit/";
 	}
 
 }

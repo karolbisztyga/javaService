@@ -4,11 +4,17 @@ $(document).ready(function() {
 		url:"status",
 		type:"post",
 		success: function(data) {
+			console.log(data);
 			if(typeof data.userName === 'undefined') {
 				createMenu(["home","login","register"]);
 			} else {
-				$("#status-bar").append("<div class='status'>logged in as <strong>"+ data.userName[0] +"</strong></div>");
+				var avatar = (typeof data.avatar === 'undefined') ?
+						"<div id='avatar' class='fa fa-user'></div>" :
+						"<img id='avatar' src='"+data.avatar[0]+"' />" ;
+				$("#status-bar").append("<div class='status'>logged in as <strong>"+ 
+						data.userName[0] +"</strong>"+avatar+"</div>");
 				createMenu(["home","editProfile","logout"]);
+
 			}
 			if(typeof data.alerts !== 'undefined') {
 				var alerts = JSON.parse(data.alerts)[0];

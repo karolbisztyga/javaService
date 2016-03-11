@@ -21,12 +21,10 @@ public class StaticContent extends DefaultServlet {
 		super();
 	}
 
-	private static final long serialVersionUID = 1L;
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
         response.setHeader("Pragma", "no-cache");
-		request.getRequestDispatcher("/WEB-INF"+request.getRequestURL().toString().split("Service")[1]).forward(request, response);
+		request.getRequestDispatcher("/WEB-INF"+request.getRequestURL().toString().split("ServiceGit")[1]).forward(request, response);
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

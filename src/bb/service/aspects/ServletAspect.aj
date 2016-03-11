@@ -57,7 +57,7 @@ public aspect ServletAspect {
 			execution(* bb.service.servlets.*.doPost(HttpServletRequest, HttpServletResponse)) && args(request, response){
 		ServletConfig config = ((HttpServlet)thisJoinPoint.getThis()).getServletConfig();
 		String securityLevel = config.getInitParameter("security");
-		
+		//... secure it!
 		proceed(request, response);
 	}
 	

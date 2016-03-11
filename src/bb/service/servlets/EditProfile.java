@@ -2,6 +2,7 @@ package bb.service.servlets;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 
@@ -29,6 +30,8 @@ import bb.service.sessionstorage.UserSessionStorage;
 		maxRequestSize=1024*1024*50)
 public class EditProfile extends HttpServlet {
 	
+	public static final String[] AVATAR_EXTENSIONS = {"png","jpg","gif"};
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 	}
@@ -48,18 +51,18 @@ public class EditProfile extends HttpServlet {
 					}
 				}
 				case "picture": {
-					String appPath = request.getServletContext().getRealPath("");
-					String uploadPath = appPath + File.separator + UserManager.AVATARS_UPLOAD_PATH;
-					File fileUploadDir = new File(uploadPath);
-					if(!fileUploadDir.exists()) {
-						fileUploadDir.mkdirs();
-					}
+					//String uploadPath = request.getServletContext().getRealPath("")+UserManager.getAvatarsUploadPath();
 					Part fileToUpload = request.getPart("file");
-					System.out.println("----" + fileToUpload.getName());
-					UserSessionStorage user = (UserSessionStorage)request.getSession().getAttribute(UserSessionStorage.STORAGE_TITLE);
-					//extension validation...
-					fileToUpload.write(fileUploadDir.getPath() + File.separator + user.getName() + "." + getFileExtension(fileToUpload));
-					
+					//UserSessionStorage user = (UserSessionStorage)request.getSession().getAttribute(UserSessionStorage.STORAGE_TITLE);
+					String extension = getFileExtension(fileToUpload);
+					if(!Arrays.asList(AVATAR_EXTENSIONS).contains(extension)) {
+						throw new UserDataException("avatar must be one of those formats: " + String.join(", ", AVATAR_EXTENSIONS));
+					}
+					//fileToUpload.write(uploadPath + File.separator + user.getName() + "." + extension);
+					fileToUpload.write(UserManager.buildAvatarFilePath(request, extension));
+					//size check!
+					System.out.println("-------------" + fileToUpload.getSize());
+					throw new UserDataException("file uploaded successfully");
 					/*for(Part part : request.getParts()) {
 						String fileName = null;
 						String header = part.getHeader("content-disposition");
@@ -76,7 +79,14 @@ public class EditProfile extends HttpServlet {
 						}
 						part.write(fileUploadDir.getPath() + File.separator +"my_prefix_" + fileName);
 					}*/
-					break;
+				}
+				case "delete_picture": {
+					File avatarFile = new File(UserManager.buildAvatarFilePath(request));
+					if(avatarFile.delete()) {
+						throw new UserDataException("avatar deleted");
+					} else {
+						throw new UserDataException("avatar could not be deleted");
+					}
 				}
 			}
 		} catch(UserDataException e) {

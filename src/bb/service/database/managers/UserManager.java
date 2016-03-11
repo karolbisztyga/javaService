@@ -7,6 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.hibernate.Session;
@@ -16,11 +17,11 @@ import org.hibernate.cfg.AnnotationConfiguration;
 
 import bb.service.database.entities.UserEntity;
 import bb.service.exceptions.UserDataException;
+import bb.service.servlets.EditProfile;
+import bb.service.servlets.Home;
 import bb.service.sessionstorage.UserSessionStorage;
 
 public class UserManager {
-	
-	public static final String AVATARS_UPLOAD_PATH = "users" + File.separator + "avatars";
 	
 	private static ThreadLocal<UserManager> instance;
 	private SessionFactory sessionFactory;
@@ -219,6 +220,56 @@ public class UserManager {
 			};
 		}
 		return UserManager.instance.get();
+	}
+
+	public static String getAvatarsUploadPath() {
+		return getAvatarsUploadPath(File.separator);
+	}
+	
+	public static String getAvatarsUploadPath(String separator) {
+		return "users" + separator + "avatars";
+	}
+
+	public static String buildAvatarFilePath(HttpServletRequest request) {
+		return buildAvatarFilePath(request, null);
+	}
+	public static String buildAvatarFilePath(HttpServletRequest request, String extension) {
+		Object preventNullPointer = request.getSession().getAttribute(UserSessionStorage.STORAGE_TITLE);
+		if(preventNullPointer == null) {
+			return null;
+		}
+		UserSessionStorage user = (UserSessionStorage)preventNullPointer;
+		String avatarPath = request.getServletContext().getRealPath("")+UserManager.getAvatarsUploadPath() + File.separator;
+		File createIfNotExists = new File(avatarPath);
+		if(!createIfNotExists.exists()) {
+			createIfNotExists.mkdirs();
+		}
+		String avatarExt = (extension == null) ? UserManager.getAvatarExtension(avatarPath, user.getName()) : extension;
+		if(avatarExt == null) return null;
+		return avatarPath + user.getName() + "." + avatarExt;
+	}
+	
+	public static String buildAvatarServerPath(HttpServletRequest request) {
+		Object preventNullPointer = request.getSession().getAttribute(UserSessionStorage.STORAGE_TITLE);
+		if(preventNullPointer == null) {
+			return null;
+		}
+		UserSessionStorage user = (UserSessionStorage)preventNullPointer;
+		String avatarExt = UserManager.getAvatarExtension(
+				request.getServletContext().getRealPath("")+UserManager.getAvatarsUploadPath(), 
+				user.getName());
+		if(avatarExt == null) return null;
+		return Home.getPathPrefix()+UserManager.getAvatarsUploadPath("/") + "/" + user.getName() + "." + avatarExt;
+	}
+	
+	public static String getAvatarExtension(String avatarPath, String userName) {
+		for(String ext : EditProfile.AVATAR_EXTENSIONS) {
+			File avatarFile = new File(avatarPath+"/"+userName+"."+ext);
+			if(avatarFile.exists()) {
+				return ext;
+			}
+		}
+		return null;
 	}
 	
 	/*

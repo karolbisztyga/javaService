@@ -1,5 +1,6 @@
 package bb.service.servlets.ajax;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Iterator;
@@ -13,12 +14,14 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
+import bb.service.database.managers.UserManager;
+import bb.service.servlets.EditProfile;
+import bb.service.servlets.Home;
 import bb.service.sessionstorage.StatusSessionStorage;
 import bb.service.sessionstorage.UserSessionStorage;
 
 @WebServlet("/status")
 public class Status extends HttpServlet {
-	private static final long serialVersionUID = 1L;
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		throw new UnsupportedOperationException();
@@ -34,6 +37,20 @@ public class Status extends HttpServlet {
 		if(preventNullPointer != null) {
 			UserSessionStorage user = (UserSessionStorage)preventNullPointer;
 			result.append("userName", user.getName());
+			//avatar
+			/*String avatarPath = request.getServletContext().getRealPath("")+UserManager.getAvatarsUploadPath();
+			String avatarExt = null;
+			for(String ext : EditProfile.AVATAR_EXTENSIONS) {
+				File avatarFile = new File(avatarPath+"/"+user.getName()+"."+ext);
+				if(avatarFile.exists()) {
+					avatarExt = ext;
+					break;
+				}
+			}*/
+			String avatarPath = UserManager.buildAvatarServerPath(request);
+			if(avatarPath != null) {
+				result.append("avatar", avatarPath);
+			}
 		}
 		//status
 		preventNullPointer = session.getAttribute(StatusSessionStorage.STORAGE_TITLE);
