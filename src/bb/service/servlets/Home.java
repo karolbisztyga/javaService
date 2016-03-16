@@ -22,10 +22,10 @@ import bb.service.sessionstorage.UserSessionStorage;
 public class Home extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String s = UserManager.buildAvatarFilePath(request);
+		/*String s = UserManager.buildAvatarFilePath(request);
 		if(s!=null)System.out.println("-----------------------" + s);
 		s = UserManager.buildAvatarServerPath(request);
-		if(s!=null)System.out.println("-----------------------" + s);
+		if(s!=null)System.out.println("-----------------------" + s);*/
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

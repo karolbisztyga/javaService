@@ -1,11 +1,13 @@
 package bb.service.servlets;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebInitParam;
@@ -25,12 +27,12 @@ import bb.service.sessionstorage.UserSessionStorage;
 			@WebInitParam(name="security", value="user"),
 			@WebInitParam(name="view", value="editProfile"),
 		})
-@MultipartConfig(fileSizeThreshold=1024*1024*2,
-		maxFileSize=1024*1024*10,
-		maxRequestSize=1024*1024*50)
+@MultipartConfig()
 public class EditProfile extends HttpServlet {
-	
-	public static final String[] AVATAR_EXTENSIONS = {"png","jpg","gif"};
+
+	private final int MAX_AVATAR_PIXELS = 500;
+	private final int MAX_AVATAR_BYTES = 1024*512;//0.5MB
+	public static final String[] AVATAR_EXTENSIONS = {"png","jpg"};
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -53,8 +55,16 @@ public class EditProfile extends HttpServlet {
 				case "picture": {
 					//String uploadPath = request.getServletContext().getRealPath("")+UserManager.getAvatarsUploadPath();
 					Part fileToUpload = request.getPart("file");
+					System.out.println();
+					if(fileToUpload.getSize() > MAX_AVATAR_BYTES) {
+						throw new UserDataException("avatar must not exceed " + MAX_AVATAR_BYTES + " bytes");
+					}
 					//UserSessionStorage user = (UserSessionStorage)request.getSession().getAttribute(UserSessionStorage.STORAGE_TITLE);
 					String extension = getFileExtension(fileToUpload);
+					BufferedImage bufferImage = ImageIO.read(fileToUpload.getInputStream());
+					if(bufferImage.getWidth() > MAX_AVATAR_PIXELS || bufferImage.getHeight() > MAX_AVATAR_PIXELS) {
+						throw new UserDataException("avatar max size is " + MAX_AVATAR_PIXELS + "x" + MAX_AVATAR_PIXELS + "[px]" );
+					}
 					if(!Arrays.asList(AVATAR_EXTENSIONS).contains(extension)) {
 						throw new UserDataException("avatar must be one of those formats: " + String.join(", ", AVATAR_EXTENSIONS));
 					}

@@ -6,6 +6,7 @@ import java.util.ArrayDeque;
 import java.util.Iterator;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,15 +21,16 @@ import bb.service.servlets.Home;
 import bb.service.sessionstorage.StatusSessionStorage;
 import bb.service.sessionstorage.UserSessionStorage;
 
-@WebServlet("/status")
+@WebServlet(urlPatterns={"/status"},
+		initParams = {
+			@WebInitParam(name="security",value="user")
+		})
 public class Status extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		throw new UnsupportedOperationException();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("application/json");
 		JSONObject result = new JSONObject();
 		HttpSession session = request.getSession();
 		Object preventNullPointer;

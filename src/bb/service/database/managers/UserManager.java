@@ -209,6 +209,27 @@ public class UserManager {
         databaseSession.close();
 	    return (result.size()>0);
 	}
+	
+	public UserEntity findUser(String name) {
+		Session databaseSession = null;
+	    Transaction transaction = null;
+	    try {
+	        databaseSession = this.sessionFactory.openSession();
+	        transaction = databaseSession.beginTransaction();
+	        String query = "FROM UserEntity u WHERE u.name=:name";
+	        List result = databaseSession.createQuery(query)
+	                .setParameter("name", name)
+	                .list();
+	        if(result.size()==1) {
+        		return ((UserEntity)result.get(0));
+	        }
+	        return null;
+	    } finally {
+	        if(databaseSession!=null) {
+	            databaseSession.close();
+	        }
+	    }
+	}
 
 	public static UserManager getInstance() {
 		if(UserManager.instance==null) {
@@ -233,6 +254,7 @@ public class UserManager {
 	public static String buildAvatarFilePath(HttpServletRequest request) {
 		return buildAvatarFilePath(request, null);
 	}
+	
 	public static String buildAvatarFilePath(HttpServletRequest request, String extension) {
 		Object preventNullPointer = request.getSession().getAttribute(UserSessionStorage.STORAGE_TITLE);
 		if(preventNullPointer == null) {

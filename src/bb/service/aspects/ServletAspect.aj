@@ -61,4 +61,15 @@ public aspect ServletAspect {
 		proceed(request, response);
 	}
 	
+	void around(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException:
+			execution(* bb.service.servlets.ajax.*.doPost(HttpServletRequest, HttpServletResponse)) && args(request, response) {
+		response.setContentType("application/json");
+		proceed(request, response);
+	}
+	
+	void around(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException:
+			execution(* bb.service.servlets.ajax.*.doGet(HttpServletRequest, HttpServletResponse)) && args(request, response) {
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	}
+	
 }
