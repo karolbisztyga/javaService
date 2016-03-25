@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 
 import bb.service.database.managers.UserManager;
+import bb.service.files.managers.AvatarFileManager;
 import bb.service.servlets.EditProfile;
 import bb.service.servlets.Home;
 import bb.service.sessionstorage.StatusSessionStorage;
@@ -40,16 +41,7 @@ public class Status extends HttpServlet {
 			UserSessionStorage user = (UserSessionStorage)preventNullPointer;
 			result.append("userName", user.getName());
 			//avatar
-			/*String avatarPath = request.getServletContext().getRealPath("")+UserManager.getAvatarsUploadPath();
-			String avatarExt = null;
-			for(String ext : EditProfile.AVATAR_EXTENSIONS) {
-				File avatarFile = new File(avatarPath+"/"+user.getName()+"."+ext);
-				if(avatarFile.exists()) {
-					avatarExt = ext;
-					break;
-				}
-			}*/
-			String avatarPath = UserManager.buildAvatarServerPath(request);
+			String avatarPath = AvatarFileManager.getInstance().buildAvatarServerPath(request);
 			if(avatarPath != null) {
 				result.append("avatar", avatarPath);
 			}

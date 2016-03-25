@@ -4,16 +4,13 @@ $(document).ready(function() {
 		url:"status",
 		type:"post",
 		success: function(data) {
-			console.log(data);
 			if(typeof data.userName === 'undefined') {
 				createMenu(["home","login","register"]);
 			} else {
-				var avatar = (typeof data.avatar === 'undefined') ?
-						"<div id='avatar' class='fa fa-user'></div>" :
-						"<img id='avatar' src='"+data.avatar[0]+"' />" ;
+				var avatar = getAvatar(data.avatar) ;
 				$("#status-bar").append("<div class='status'>logged in as <strong>"+ 
-						data.userName[0] +"</strong>"+avatar+"</div>");
-				createMenu(["home","editProfile","logout"]);
+						data.userName[0] +"</strong><br>"+avatar+"</div>");
+				createMenu(["home","editProfile","findUser","logout"]);
 
 			}
 			if(typeof data.alerts !== 'undefined') {
@@ -38,3 +35,9 @@ $(document).ready(function() {
 	}
 
 });
+
+function getAvatar(avatar) {
+	return (typeof avatar === 'undefined') ?
+			"<div class='avatar fa fa-user'></div>" :
+			"<img class='avatar' src='"+avatar[0]+"' />"
+}

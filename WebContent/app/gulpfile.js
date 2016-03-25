@@ -38,7 +38,8 @@ gulp.task('sass', function() {
 });
 
 var scripts = [
-        "global"];
+        "global",
+        "findUser"];
 
 for(var i=0;i<scripts.length;++i) {
     // Concatenate & Minify JS

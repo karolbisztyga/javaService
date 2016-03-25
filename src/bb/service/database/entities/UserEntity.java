@@ -1,9 +1,14 @@
 package bb.service.database.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -24,15 +29,18 @@ public class UserEntity {
 	@Column(name="email", nullable=false)
 	private String email;
 
-	@Column(name="imagePath")
-	private String imagePath;
-
 	@Column(name="sessionId")
 	private String sessionId;
 
-	public UserEntity() {}
+	@OneToMany(targetEntity=UserEntity.class, fetch=FetchType.EAGER)
+	private Set<UserEntity> mutedUsers;
+
+	public UserEntity() {
+		this.mutedUsers = new HashSet<>();
+	}
 
 	public UserEntity(String name, String password, String email) {
+		this();
 		this.name = name;
 		this.password = password;
 		this.email = email;
@@ -77,13 +85,32 @@ public class UserEntity {
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
 	}
-
-	public String getImagePath() {
-		return imagePath;
+	
+	public Set<UserEntity> getMutedUsers() {
+		return mutedUsers;
 	}
 
-	public void setImagePath(String imagePath) {
-		this.imagePath = imagePath;
+	public void setMutedUsers(Set<UserEntity> mutedUsers) {
+		this.mutedUsers = mutedUsers;
+	}
+
+	@Override
+	public int hashCode() {
+		return id;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserEntity other = (UserEntity) obj;
+		if (id != other.id)
+			return false;
+		return true;
 	}
 	
 }

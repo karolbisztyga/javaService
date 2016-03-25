@@ -19,6 +19,7 @@ import javax.servlet.http.Part;
 
 import bb.service.database.managers.UserManager;
 import bb.service.exceptions.UserDataException;
+import bb.service.files.managers.AvatarFileManager;
 import bb.service.sessionstorage.StatusSessionStorage;
 import bb.service.sessionstorage.UserSessionStorage;
 
@@ -55,13 +56,15 @@ public class EditProfile extends HttpServlet {
 				case "picture": {
 					//String uploadPath = request.getServletContext().getRealPath("")+UserManager.getAvatarsUploadPath();
 					Part fileToUpload = request.getPart("file");
-					System.out.println();
 					if(fileToUpload.getSize() > MAX_AVATAR_BYTES) {
 						throw new UserDataException("avatar must not exceed " + MAX_AVATAR_BYTES + " bytes");
 					}
 					//UserSessionStorage user = (UserSessionStorage)request.getSession().getAttribute(UserSessionStorage.STORAGE_TITLE);
 					String extension = getFileExtension(fileToUpload);
 					BufferedImage bufferImage = ImageIO.read(fileToUpload.getInputStream());
+					if(bufferImage == null) {
+						throw new UserDataException("no file selected");
+					}
 					if(bufferImage.getWidth() > MAX_AVATAR_PIXELS || bufferImage.getHeight() > MAX_AVATAR_PIXELS) {
 						throw new UserDataException("avatar max size is " + MAX_AVATAR_PIXELS + "x" + MAX_AVATAR_PIXELS + "[px]" );
 					}
@@ -69,7 +72,7 @@ public class EditProfile extends HttpServlet {
 						throw new UserDataException("avatar must be one of those formats: " + String.join(", ", AVATAR_EXTENSIONS));
 					}
 					//fileToUpload.write(uploadPath + File.separator + user.getName() + "." + extension);
-					fileToUpload.write(UserManager.buildAvatarFilePath(request, extension));
+					fileToUpload.write(AvatarFileManager.getInstance().buildAvatarFilePath(request, extension));
 					//size check!
 					System.out.println("-------------" + fileToUpload.getSize());
 					throw new UserDataException("file uploaded successfully");
@@ -91,7 +94,11 @@ public class EditProfile extends HttpServlet {
 					}*/
 				}
 				case "delete_picture": {
-					File avatarFile = new File(UserManager.buildAvatarFilePath(request));
+					String path = AvatarFileManager.getInstance().buildAvatarFilePath(request);
+					if(path == null) {
+						throw new UserDataException("no picture to delete");
+					}
+					File avatarFile = new File(path);
 					if(avatarFile.delete()) {
 						throw new UserDataException("avatar deleted");
 					} else {
