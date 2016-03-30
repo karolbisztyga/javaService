@@ -1,0 +1,21 @@
+.category-title {
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
+	display: block;
+	height: 100%;
+	font-weight: 900;
+	padding: 12px;
+
+	&:hover {
+		background: rgba(0,0,0,.5);
+	}
+}
+
+#loader {
+	height: 100px;
+}
+
+.message {
+	
+}

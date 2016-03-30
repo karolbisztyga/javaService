@@ -21,7 +21,7 @@ public class Error extends HttpServlet {
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		throw new UnsupportedOperationException();
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
 }

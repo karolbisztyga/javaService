@@ -44,10 +44,11 @@ public class EditProfile extends HttpServlet {
 		try {
 			switch(action) {
 				case "password": {
+					String userName = ((UserSessionStorage)request.getSession().getAttribute(UserSessionStorage.STORAGE_TITLE)).getName();
 					String oldPassword = request.getParameter("old-password");
 					String password = request.getParameter("password");
 					String passwordRepeat = request.getParameter("password-repeat");
-					if(UserManager.getInstance().updatePassword(request.getSession(), oldPassword, password, passwordRepeat)) {
+					if(UserManager.getInstance().updatePassword(userName, oldPassword, password, passwordRepeat)) {
 						throw new UserDataException("password changed");
 					} else {
 						throw new UserDataException("an error occured");

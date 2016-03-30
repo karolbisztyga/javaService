@@ -1,0 +1,19 @@
+extends ./template.jade
+
+block styles
+	link(rel="stylesheet",href="css/messages.css")
+
+block content
+	div(class="container-fluid")
+		div(class="row")
+			div(class="col-xs-6")
+				span(id="received",class="category-title") received
+			div(class="col-xs-6")
+				span(id="sent",class="category-title") sent
+		div(class="row")
+			div(id="messages",class="container-fluid")
+		div(id="loader", class="row")
+
+
+block scripts
+	script(src="js/messages.js")

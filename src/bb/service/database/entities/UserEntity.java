@@ -1,5 +1,8 @@
 package bb.service.database.entities;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,18 +35,23 @@ public class UserEntity {
 	@Column(name="sessionId")
 	private String sessionId;
 
-	@OneToMany(targetEntity=UserEntity.class, fetch=FetchType.EAGER)
+	@OneToMany
 	private Set<UserEntity> mutedUsers;
-
+	
+	@Column(name="unreadMessages")
+	private int unreadMessages;
+	
 	public UserEntity() {
-		this.mutedUsers = new HashSet<>();
 	}
-
+	
 	public UserEntity(String name, String password, String email) {
-		this();
+		super();
 		this.name = name;
 		this.password = password;
 		this.email = email;
+		this.sessionId = null;
+		this.mutedUsers = new HashSet<>();
+		this.unreadMessages = 0;
 	}
 
 	public int getId() {
@@ -92,6 +100,14 @@ public class UserEntity {
 
 	public void setMutedUsers(Set<UserEntity> mutedUsers) {
 		this.mutedUsers = mutedUsers;
+	}
+
+	public int getUnreadMessages() {
+		return unreadMessages;
+	}
+
+	public void setUnreadMessages(int unreadMessages) {
+		this.unreadMessages = unreadMessages;
 	}
 
 	@Override

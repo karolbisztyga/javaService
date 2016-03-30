@@ -49,7 +49,9 @@ public aspect ServletAspect {
 		}
 		if(renderView) {
 			proceed(request, response);
-			request.getRequestDispatcher("/WEB-INF/"+view+".html").forward(request, response);
+			if(view != null) {
+				request.getRequestDispatcher("/WEB-INF/"+view+".html").forward(request, response);
+			}
 		}
 	}
 	

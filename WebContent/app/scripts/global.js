@@ -5,12 +5,23 @@ $(document).ready(function() {
 		type:"post",
 		success: function(data) {
 			if(typeof data.userName === 'undefined') {
-				createMenu(["home","login","register"]);
+				createMenu({
+					"home":"home",
+					"login":"login",
+					"register":"register",
+				});
 			} else {
+				var unreadMessages = data.unreadMessages[0];
 				var avatar = getAvatar(data.avatar) ;
 				$("#status-bar").append("<div class='status'>logged in as <strong>"+ 
 						data.userName[0] +"</strong><br>"+avatar+"</div>");
-				createMenu(["home","editProfile","findUser","logout"]);
+				createMenu({
+					"home":"home",
+					"messages":"messages("+ unreadMessages +")",
+					"editProfile":"editProfile",
+					"findUser":"findUser",
+					"logout":"logout"
+				});
 
 			}
 			if(typeof data.alerts !== 'undefined') {
@@ -29,8 +40,7 @@ $(document).ready(function() {
 
 	function createMenu(items) {
 		for(var i in items) {
-			var item = items[i];
-			$("#menu").append("<a href='"+ item +"'>"+ item +"</a>");
+			$("#menu").append("<a href='"+ i +"'>"+ items[i] +"</a>");
 		}
 	}
 
@@ -39,5 +49,5 @@ $(document).ready(function() {
 function getAvatar(avatar) {
 	return (typeof avatar === 'undefined') ?
 			"<div class='avatar fa fa-user'></div>" :
-			"<img class='avatar' src='"+avatar[0]+"' />"
+			"<img class='avatar' src='"+avatar[0]+"' />";
 }

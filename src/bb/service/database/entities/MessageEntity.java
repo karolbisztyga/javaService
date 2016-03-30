@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -32,6 +33,12 @@ public class MessageEntity {
 	
 	@Column(name="sendDate", nullable=false)
 	private Long sendDate;
+	
+	@Column(name="viewed", nullable=false)
+	private boolean viewed;
+	
+	public MessageEntity() {
+	}
 
 	public MessageEntity(UserEntity author, UserEntity target, String message, Long sendDate) {
 		this.author = author;
@@ -78,6 +85,14 @@ public class MessageEntity {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public boolean isViewed() {
+		return viewed;
+	}
+
+	public void setViewed(boolean viewed) {
+		this.viewed = viewed;
 	}
 
 }

@@ -29,6 +29,7 @@ import bb.service.sessionstorage.UserSessionStorage;
 public class Status extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -45,6 +46,7 @@ public class Status extends HttpServlet {
 			if(avatarPath != null) {
 				result.append("avatar", avatarPath);
 			}
+			result.append("unreadMessages", user.getUnreadMessages());
 		}
 		//status
 		preventNullPointer = session.getAttribute(StatusSessionStorage.STORAGE_TITLE);

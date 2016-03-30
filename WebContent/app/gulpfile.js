@@ -15,7 +15,6 @@ var rename = require('gulp-rename');
 var jade = require('gulp-jade');
 var gutil = require('gulp-util');
 
-
 var onError = function(error) {
     console.log(error.message);
     gutil.beep();
@@ -39,7 +38,8 @@ gulp.task('sass', function() {
 
 var scripts = [
         "global",
-        "findUser"];
+        "findUser",
+        "messages"];
 
 for(var i=0;i<scripts.length;++i) {
     // Concatenate & Minify JS

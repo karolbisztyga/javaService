@@ -9,10 +9,13 @@ public class UserSessionStorage implements Serializable {
 	
 	private String name;
 	private String ip;
-	
-	public UserSessionStorage(String name, String ip) {
+	private int unreadMessages;
+
+	public UserSessionStorage(String name, String ip, int unreadMessages) {
+		super();
 		this.name = name;
 		this.ip = ip;
+		this.unreadMessages = unreadMessages;
 	}
 
 	public String getName() {
@@ -29,6 +32,14 @@ public class UserSessionStorage implements Serializable {
 
 	public void setIp(String ip) {
 		this.ip = ip;
+	}
+
+	public int getUnreadMessages() {
+		return unreadMessages;
+	}
+
+	public void setUnreadMessages(int unreadMessages) {
+		this.unreadMessages = unreadMessages;
 	}
 	
 }

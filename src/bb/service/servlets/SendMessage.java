@@ -15,34 +15,30 @@ import bb.service.exceptions.UserDataException;
 import bb.service.sessionstorage.StatusSessionStorage;
 import bb.service.sessionstorage.UserSessionStorage;
 
-@WebServlet(urlPatterns={"/muteUser"},
+@WebServlet(urlPatterns={"/sendMessage"},
 initParams = {
 	@WebInitParam(name="security",value="user")
 })
-public class MuteUser extends HttpServlet {
-
+public class SendMessage extends HttpServlet {
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String result = null;
 		try {
-			String mutingName = ((UserSessionStorage)request.getSession().getAttribute(UserSessionStorage.STORAGE_TITLE)).getName();
-			String mutedName = request.getParameter("userName");
-			boolean muted = request.getParameter("muted").equals("true");
-			boolean res = UserManager.getInstance().setMute(mutingName, mutedName, !muted);
-			String mutedText = (muted) ? "unmuted" : "muted" ;
-			if(res) {
-				request.getSession().setAttribute(StatusSessionStorage.STORAGE_TITLE, new StatusSessionStorage(new String[]{
-						"user " + mutedName + " successfuly " + mutedText
-					}));
-			}
+			String currentUserName = ((UserSessionStorage)request.getSession().getAttribute(UserSessionStorage.STORAGE_TITLE)).getName();
+			String targetName = request.getParameter("target");
+			String message = request.getParameter("message");
+			UserManager.getInstance().sendMessage(currentUserName, targetName, message);
+			result = "message sent";
 		} catch(UserDataException | NoSuchUserException e) {
-			request.getSession().setAttribute(StatusSessionStorage.STORAGE_TITLE, new StatusSessionStorage(new String[]{e.getMessage()}));
+			result = e.getMessage();
 		} finally {
+			request.getSession().setAttribute(StatusSessionStorage.STORAGE_TITLE, new StatusSessionStorage(new String[]{result}));
 			response.sendRedirect(Home.getPathPrefix() + "findUser");
 		}
-		
 	}
 
 }
